@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon</title>
+    <style>
+        /* Reset default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #0074f9;
+            color: #0a0a0a;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid rgb(0, 0, 0);
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #fff;
+            margin-right: 20px;
+            transition: color 0.3s, text-shadow 0.3s, font-size 0.3s, text-decoration 0.3s; /* Added font-size and text-decoration */
+            font-size: 20px; /* Increased font size */
+        }
+
+        .nav-links a:hover {
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            font-size: 22px; /* Increase font size on hover */
+            text-decoration: underline; /* Add underline on hover */
+        }
+
+        .search-container input[type=text] {
+            padding: 10px;
+            border-radius: 25px;
+            border: 2px solid rgb(0, 0, 0);
+            font-size: 16px;
+            color: #333;
+            transition: border-color 0.3s;
+        }
+
+        .search-container button {
+            background-color: rgb(0, 3, 155);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .product-list {
+            max-height: 80vh; /* Set maximum height for scrollable area */
+            overflow-y: auto; /* Enable vertical scrolling */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between; /* Added to ensure equal spacing between products */
+        }
+
+        .product {
+            width: calc(25% - 20px); /* Adjusted width for better alignment */
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            position: relative;
+            text-align: center; /* Center align content */
+            margin-bottom: 20px; /* Added margin bottom for spacing between rows */
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .product img {
+            width: 100%;
+            border-radius: 15px;
+        }
+
+        .product h2 {
+            font-size: 20px;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .product p {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .product button {
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: block;
+            padding: 0;
+            background-color: transparent;
+            border: none;
+        }
+
+        .billing-container {
+            width: 400px; /* Adjusted width for better visibility */
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-left: 20px;
+            opacity: 0;
+            transform: translateY(100%);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .billing-container.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .billing-container h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .billing-item {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .billing-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .billing-total {
+            font-weight: bold;
+            color: #333;
+        }
+
+        footer {
+            background-color: #232f3e;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            width: 100%;
+            z-index: 999; /* Ensure footer is above other content */
+            clear: both; /* Added to clear floats */
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        .footer-content {
+            padding-top: 20px; /* Added padding */
+        }
+
+        .contact-info {
+            font-size: 16px;
+            margin-bottom: 10px; /* Added margin */
+        }
+
+        .contact-info a {
+            color: #fff; /* Set default color to white */
+            transition: color 0.3s; /* Add transition effect for color change */
+        }
+
+        .contact-info a:hover {
+            color: rgb(0, 0, 0); /* Change color to blue on hover */
+        }
+
+        .quantity-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .quantity-btn {
+            width: 30px; /* Adjusted width */
+            height: 30px; /* Added height */
+            border-radius: 1000%; /* Rounded shape */
+            border: 5px solid #010101; /* Added border */
+            background-color: #000000; /* White background */
+            font-size: 16px;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        .quantity-btn:hover {
+            background-color: #f0f0f0; /* Lighter background on hover */
+        }
+
+        .quantity {
+            margin: 0 50px; /* Adjusted margin for better spacing */
+        }
+
+        .add {
+            color: #0f0; /* Green color for add button */
+        }
+
+        .subtract {
+            color: #f00; /* Red color for subtract button */
+        }
+
+        /* Add glow effect on hover */
+        .product button:hover {
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5); /* Green glow effect */
+        }
+
+        /* Add pop effect when clicked */
+        .product button.clicked {
+            animation: pop 0.3s ease;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Add logo to the top left corner -->
+        <img src="https://raw.githubusercontent.com/Malay998/amazon/main/brand.png" alt="Brand Logo" style="position: absolute; top: 15px; left: 20px; height: 90px;">
+    
+        <!-- Add logo to the top right corner -->
+        <img src="https://raw.githubusercontent.com/Malay998/amazon/main/logo.png" alt="Logo" style="position: absolute; top: 10px; right: 20px; height: 95px;">
+    
+        <h1></h1>
+        <nav>
+            <div class="nav-links">
+                <a href="#">Home</a>
+                <a href="#" onclick="toggleBilling()">Cart (<span class="cart-count">0</span>)</a>
+                <a href="#">Shop</a>
+                <a href="#">Checkout</a>
+            </div>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search...">
+                <button type="button" onclick="searchProducts()">Search</button>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="product-list">
+            <!-- Product items will be dynamically generated here -->
+        </section>
+        <div class="billing-container">
+            <h2>Billing Information</h2>
+            <div id="billingList"></div>
+            <p class="billing-total">Total Price: $0.00</p>
+        </div>
+    </main>
+    <footer>
+        <div class="footer-content">
+            <div class="contact-info">
+                <p>Contact us: <a href="mailto:malayp571@gmail.com">malayp571@gmail.com</a> | Phone: <a href="tel:+919699461142">+91 9699461142</a></p>
+                <p>Customer Service: 24/7</p>
+                <p>Address: HSR Head Office Bengaluru, Karnataka, India</p>
+            </div>
+            <p>&copy; 2024 Malay Paul</p>
+        </div>
+    </footer>
+
+    <script>
+        const products = [
+            { id: 1, name: 'Mango', price: 19.99 },
+            { id: 2, name: 'Apples', price: 5.99 },
+            { id: 3, name: 'Bananas', price: 3.49 },
+            { id: 4, name: 'Milk', price: 2.99 },
+            { id: 5, name: 'Bread', price: 4.49 },
+            { id: 6, name: 'Eggs', price: 3.99 },
+            { id: 7, name: 'Cheese', price: 6.99 },
+            { id: 8, name: 'Chicken', price: 9.99 },
+            { id: 9, name: 'Rice', price: 7.99 },
+            { id: 10, name: 'Tomatoes', price: 4.99 },
+            { id: 11, name: 'Spinach', price: 2.49 }, // New product
+            { id: 12, name: 'Potatoes', price: 3.99 }, // New product
+            { id: 13, name: 'Onions', price: 2.99 }, // New product
+            { id: 14, name: 'Carrots', price: 1.99 }, // New product
+            { id: 15, name: 'Broccoli', price: 2.99 }, // New product
+            { id: 16, name: 'Cucumber', price: 1.49 }, // New product
+            { id: 17, name: 'Lettuce', price: 1.99 }, // New product
+            { id: 18, name: 'Oranges', price: 4.99 }, // New product
+            { id: 19, name: 'Grapes', price: 3.99 }, // New product
+            { id: 20, name: 'Pineapple', price: 5.99 } // New product
+        ];
+
+        let cartItems = [];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            displayProducts(products);
+            // Add event listeners to quantity containers
+            const quantityContainers = document.querySelectorAll('.quantity-container');
+            quantityContainers.forEach(container => {
+                container.addEventListener('click', function (event) {
+                    const productId = parseInt(container.dataset.productId);
+                    const boundingRect = container.getBoundingClientRect();
+                    const clickX = event.clientX - boundingRect.left;
+                    if (clickX < boundingRect.width / 2) {
+                        decrementQuantity(productId);
+                    } else {
+                        incrementQuantity(productId);
+                    }
+                });
+            });
+        });
+
+        function displayProducts(products) {
+            const productContainer = document.querySelector('.product-list');
+
+            products.forEach(product => {
+                const productElement = document.createElement('article');
+                productElement.classList.add('product');
+
+                productElement.innerHTML = `
+                    <img src="product${product.id}.jpg" alt="${product.name}">
+                    <h2>${product.name}</h2>
+                    <p>$${product.price.toFixed(2)}</p>
+                    <div class="quantity-container" data-product-id="${product.id}">
+                        <button class="quantity-btn subtract"><img src="https://raw.githubusercontent.com/Malay998/amazon/main/minus.png" alt="Minus"></button>
+                        <span class="quantity">1</span>
+                        <button class="quantity-btn add"><img src="https://raw.githubusercontent.com/Malay998/amazon/main/plus.png" alt="Plus"></button>
+                    </div>
+                    <button onclick="addToCart(${product.id})">Add to Cart</button>
+                `;
+
+                productContainer.appendChild(productElement);
+            });
+        }
+        
+        function addToCart(productId) {
+            const product = products.find(item => item.id === productId);
+            const existingItem = cartItems.find(item => item.id === productId);
+            const addButton = document.querySelector(`.product[data-product-id="${productId}"] button`);
+
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cartItems.push({ ...product, quantity: 1 });
+            }
+            updateCartCount();
+            updateBilling();
+            
+            // Add clicked class to trigger pop animation
+            addButton.classList.add('clicked');
+            // Remove clicked class after animation ends
+            addButton.addEventListener('animationend', function () {
+                addButton.classList.remove('clicked');
+            });
+        }
+
+        function incrementQuantity(productId) {
+            const productIndex = cartItems.findIndex(item => item.id === productId);
+            if (productIndex !== -1) {
+                cartItems[productIndex].quantity++;
+                updateCartCount();
+                updateBilling();
+            }
+        }
+
+        function decrementQuantity(productId) {
+            const productIndex = cartItems.findIndex(item => item.id === productId);
+            if (productIndex !== -1) {
+                if (cartItems[productIndex].quantity > 1) {
+                    cartItems[productIndex].quantity--;
+                    updateCartCount();
+                    updateBilling();
+                }
+            }
+        }
+
+        function updateCartCount() {
+            const cartCountElement = document.querySelector('.cart-count');
+            cartCountElement.textContent = cartItems.reduce((total, item) => total + item.quantity, 0);
+        }
+
+        function updateBilling() {
+            const billingList = document.getElementById('billingList');
+            const totalPriceElement = document.querySelector('.billing-total');
+
+            billingList.innerHTML = '';
+            let totalPrice = 0;
+
+            cartItems.forEach(item => {
+                const listItem = document.createElement('div');
+                listItem.classList.add('billing-item');
+                listItem.textContent = `${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}`;
+                billingList.appendChild(listItem);
+                totalPrice += item.price * item.quantity;
+            });
+
+            totalPriceElement.textContent = `Total Price: $${totalPrice.toFixed(2)}`;
+        }
+
+        function searchProducts() {
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            const filteredProducts = products.filter(product => product.name.toLowerCase().includes(searchTerm));
+            displayFilteredProducts(filteredProducts);
+        }
+
+        function displayFilteredProducts(filteredProducts) {
+            const productContainer = document.querySelector('.product-list');
+            productContainer.innerHTML = ''; // Clear existing products
+
+            filteredProducts.forEach(product => {
+                const productElement = document.createElement('article');
+                productElement.classList.add('product');
+
+                productElement.innerHTML = `
+                    <img src="product${product.id}.jpg" alt="${product.name}">
+                    <h2>${product.name}</h2>
+                    <p>$${product.price.toFixed(2)}</p>
+                    <div class="quantity-container" data-product-id="${product.id}">
+                        <button class="quantity-btn subtract"><img src="https://raw.githubusercontent.com/Malay998/amazon/main/minus.png" alt="Minus"></button>
+                        <span class="quantity">1</span>
+                        <button class="quantity-btn add"><img src="https://raw.githubusercontent.com/Malay998/amazon/main/plus.png" alt="Plus"></button>
+                    </div>
+                    <button onclick="addToCart(${product.id})">Add to Cart</button>
+                `;
+
+                productContainer.appendChild(productElement);
+            });
+            
+            // Reset the width of product containers after filtering
+            const products = document.querySelectorAll('.product');
+            products.forEach(product => {
+                product.style.width = 'calc(25% - 20px)';
+            });
+        }
+
+        function toggleBilling() {
+            const billingContainer = document.querySelector('.billing-container');
+            billingContainer.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
