@@ -28,6 +28,7 @@
             padding: 20px;
             text-align: center;
             border-bottom: 2px solid rgb(0, 0, 0);
+            position: relative;
         }
 
         .nav-links a {
@@ -250,6 +251,22 @@
                 transform: scale(1);
             }
         }
+
+        /* Landscape mode pop-up styles */
+        .landscape-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000;
+            text-align: center;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -296,6 +313,11 @@
         </div>
     </footer>
 
+    <!-- Landscape mode pop-up -->
+    <div id="landscapePopup" class="landscape-popup">
+        <p>Please view in landscape mode for better experience on mobile or tablet devices.</p>
+    </div>
+
     <script>
         const products = [
             { id: 1, name: 'Mango', price: 19.99 },
@@ -338,6 +360,15 @@
                     }
                 });
             });
+
+            // Show landscape mode pop-up for 5 seconds on page load
+            const landscapePopup = document.getElementById('landscapePopup');
+            if (isMobileOrTablet() && window.innerWidth < window.innerHeight) {
+                landscapePopup.style.display = 'block';
+                setTimeout(function() {
+                    landscapePopup.style.display = 'none';
+                }, 5000);
+            }
         });
 
         function displayProducts(products) {
@@ -466,6 +497,11 @@
         function toggleBilling() {
             const billingContainer = document.querySelector('.billing-container');
             billingContainer.classList.toggle('active');
+        }
+
+        // Function to detect mobile or tablet devices
+        function isMobileOrTablet() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
     </script>
 </body>
